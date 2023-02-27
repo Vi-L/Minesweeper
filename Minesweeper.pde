@@ -4,9 +4,8 @@ public final static int NUM_COLS = 20;
 public final static int NUM_MINES = 50;
 private MSButton[][] buttons; //2d array of minesweeper buttons
 private ArrayList <MSButton> mines = new ArrayList<MSButton>(); //ArrayList of just the minesweeper buttons that are mined
-public boolean gameLost = false;
-public boolean gameDone = false;
-public boolean isFirstClick = true;
+public boolean gameDone = false; // this boolean is used to stop clicks after the game is over
+public boolean isFirstClick = true; // this boolean is used for "safe first click" (i.e first click is never a mine)
 
 void setup ()
 {
@@ -18,6 +17,20 @@ void setup ()
     
     initGame();
 }
+
+public void draw ()
+{
+    background( 0 );
+    if(isWon()) {
+        displayWinningMessage();
+    }
+    else if (gameDone) {
+        displayLosingMessage();
+    }
+}
+
+/* GAME RELATED FUNCTIONS */
+
 public void initGame() {
   // initialize buttons
     buttons = new MSButton[NUM_ROWS][NUM_COLS];
@@ -37,22 +50,12 @@ public void setMines()
       int c = (int)(Math.random() * NUM_COLS);
       if ( !(mines.contains(buttons[r][c])) ) {
         mines.add(buttons[r][c]);
-      } else { 
+      } else { // make sure that even if we get duplicates, the total number of mines is still NUM_MINES 
         i--;
       }
     }
 }
 
-public void draw ()
-{
-    background( 0 );
-    if(isWon()) {
-        displayWinningMessage();
-    }
-    else if (gameLost) {
-        displayLosingMessage();
-    }
-}
 public boolean isWon()
 {
     for (int i = 0; i < NUM_ROWS; i++) {
@@ -69,10 +72,11 @@ public void displayLosingMessage()
 {
     displayCenterMessage("YOU LOSE");
     for (int i = 0; i < mines.size(); i++) {
-      mines.get(i).mousePressed();
+      mines.get(i).setClicked(true);
+      mines.get(i).setFlagged(false);
     }
     gameDone = true;
-}
+  }
 public void displayWinningMessage()
 {
     displayCenterMessage("YOU WIN!");
@@ -85,6 +89,8 @@ public void displayCenterMessage(String msg) {
       buttons[NUM_ROWS/2][curCol].setLabel(msg.substring(i, i+1));
     }
 }
+
+/* BUTTON AND MINE RELATED FUNCTIONS */
 
 public boolean isValid(int r, int c)
 {
@@ -125,20 +131,22 @@ public class MSButton
     {
         if (gameDone) return;
         clicked = true;
-        if (isFirstClick) {
+        if (isFirstClick) { // first click is always a "0" (blank) square
           isFirstClick = false;
-          while (mines.contains(this)) {
+          while (mines.contains(this) || countMines(myRow, myCol) > 0) {
             setMines();
           }
         }
-        if (mouseButton == RIGHT) {
+        if (mouseButton == RIGHT) { //  handle flagging
           flagged = !flagged;
           if (!flagged) clicked = false;
-        } else if (mines.contains(this)) {
-          gameLost = true;
-        } else if (countMines(myRow, myCol) > 0) {
+        } else if (flagged) { // prevent accidental clicking of flagged buttons
+          return;
+        }else if (mines.contains(this)) { // end the game if you click a mine
+          displayLosingMessage();
+        } else if (countMines(myRow, myCol) > 0) { // show number of neighboring mines
           setLabel(countMines(myRow, myCol));
-        } else {
+        } else { // recurse through valid neighbors
           for (int i = -1; i <= 1; i++) {
             for (int j = -1; j <= 1; j++) {
               if (isValid(myRow+i, myCol+j) && !(buttons[myRow+i][myCol+j].isClicked())) {
@@ -150,17 +158,22 @@ public class MSButton
     }
     public void draw () 
     {    
+      // color of square
         if (flagged)
             fill(255, 150, 150, 128);
-         else if( clicked && mines.contains(this) ) 
+        else if( clicked && mines.contains(this) ) 
              fill(255,0,0);
         else if(clicked)
             fill( 200 );
         else 
             fill( 100 );
-
         rect(x, y, width, height);
-        fill(0);
+        
+      // color of text
+        if (myLabel.equals("1")) fill(0, 0, 255);
+        else if (myLabel.equals("2")) fill(0, 255, 0);
+        else if (myLabel.equals("3")) fill(255, 0, 0); // TODO HERE <----------------------------
+        else fill(0);
         textSize(14);
         text(myLabel,x+width/2,y+height/2);
     }
@@ -178,5 +191,11 @@ public class MSButton
     }
     public boolean isClicked() {
         return clicked;
+    }
+    public void setClicked(boolean val) {
+      clicked = val;
+    }
+    public void setFlagged(boolean val) {
+      flagged = val;
     }
 }
