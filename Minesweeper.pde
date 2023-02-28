@@ -1,7 +1,7 @@
 import de.bezier.guido.*;
 public final static int NUM_ROWS = 20; // constants
 public final static int NUM_COLS = 20;
-public final static int NUM_MINES = 50;
+public final static int NUM_MINES = 40;
 private MSButton[][] buttons; //2d array of minesweeper buttons
 private ArrayList <MSButton> mines = new ArrayList<MSButton>(); //ArrayList of just the minesweeper buttons that are mined
 public boolean gameDone = false; // this boolean is used to stop clicks after the game is over
@@ -24,7 +24,7 @@ public void draw ()
     if(isWon()) {
         displayWinningMessage();
     }
-    else if (gameDone) {
+    else if (gameDone) { // gameDone and !isWon, -> game is lost
         displayLosingMessage();
     }
 }
@@ -129,7 +129,7 @@ public class MSButton
     // called by manager
     public void mousePressed () 
     {
-        if (gameDone) return;
+        if (gameDone || (clicked && !flagged)) return;
         clicked = true;
         if (isFirstClick) { // first click is always a "0" (blank) square
           isFirstClick = false;
@@ -138,14 +138,14 @@ public class MSButton
           }
         }
         if (mouseButton == RIGHT) { //  handle flagging
-          flagged = !flagged;
-          if (!flagged) clicked = false;
+            flagged = !flagged;
+            if (!flagged) clicked = false; // if we unflag, we unclick
         } else if (flagged) { // prevent accidental clicking of flagged buttons
-          return;
+            return;
         }else if (mines.contains(this)) { // end the game if you click a mine
-          displayLosingMessage();
+            displayLosingMessage();
         } else if (countMines(myRow, myCol) > 0) { // show number of neighboring mines
-          setLabel(countMines(myRow, myCol));
+            setLabel(countMines(myRow, myCol));
         } else { // recurse through valid neighbors
           for (int i = -1; i <= 1; i++) {
             for (int j = -1; j <= 1; j++) {
@@ -159,20 +159,31 @@ public class MSButton
     public void draw () 
     {    
       // color of square
-        if (flagged)
+        if (flagged) {
             fill(255, 150, 150, 128);
-        else if( clicked && mines.contains(this) ) 
+        }
+        else if( clicked && mines.contains(this) ) {
              fill(255,0,0);
-        else if(clicked)
+        }
+        else if(clicked) {
             fill( 200 );
-        else 
-            fill( 100 );
+        }
+        else {
+            fill( 100 );   
+        }
         rect(x, y, width, height);
-        
+       
       // color of text
-        if (myLabel.equals("1")) fill(0, 0, 255);
-        else if (myLabel.equals("2")) fill(0, 255, 0);
-        else if (myLabel.equals("3")) fill(255, 0, 0); // TODO HERE <----------------------------
+        if (myLabel.equals("1")) fill(55, 100, 250);
+        else if (myLabel.equals("2")) fill(0, 170, 0);
+        else if (myLabel.equals("3")) fill(255, 0, 0); 
+        else if (myLabel.equals("4")) fill(0, 0, 100); 
+        else if (myLabel.equals("5")) fill(130, 0, 0);
+        else if (myLabel.equals("6")) fill(0, 140, 142);
+        else if (myLabel.equals("7")) fill(100, 40, 255);
+        else if (myLabel.equals("8")) fill(255, 255, 255);
+        else if (isWon()) fill(220, 150, 0);
+        else if (gameDone) fill(150, 0, 0);
         else fill(0);
         textSize(14);
         text(myLabel,x+width/2,y+height/2);
