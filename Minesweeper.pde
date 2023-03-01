@@ -1,11 +1,41 @@
 import de.bezier.guido.*;
-public final static int NUM_ROWS = 20; // constants
-public final static int NUM_COLS = 20;
-public final static int NUM_MINES = 40;
+
+public int NUM_ROWS = 20; // "constants", only change at beginning before game starts
+public int NUM_COLS = 20;
+public int NUM_MINES = 40;
 private MSButton[][] buttons; //2d array of minesweeper buttons
 private ArrayList <MSButton> mines = new ArrayList<MSButton>(); //ArrayList of just the minesweeper buttons that are mined
 public boolean gameDone = false; // this boolean is used to stop clicks after the game is over
 public boolean isFirstClick = true; // this boolean is used for "safe first click" (i.e first click is never a mine)
+
+//public void handleKeyPress() {
+//  if (!isFirstClick || gameDone) return;
+//  if (key == '1') {
+//    NUM_MINES = 10;
+//  } else if (key == '2') {
+//    NUM_MINES = 20;
+//  } else if (key == '3') {
+//    NUM_MINES = 40;
+//  } else if (key == '4') {
+//    NUM_MINES = 80;
+//  } else if (key == '5') {
+//    NUM_MINES = 160;
+//  } else if (key == 's' && NUM_MINES < 25) {
+//    NUM_ROWS = 5;
+//    NUM_COLS = 5;
+//  } else if (key == 'm' && NUM_MINES < 100) {
+//    NUM_ROWS = 10;
+//    NUM_COLS = 10;
+//  } else if (key == 'l' && NUM_MINES < 400) {
+//    NUM_ROWS = 20;
+//    NUM_COLS = 20;
+//  } else if (key == 'h') {
+//    NUM_ROWS = 25;
+//    NUM_COLS = 25;
+//  }
+//  System.out.println("hit");
+//  initGame();
+//}
 
 void setup ()
 {
@@ -20,6 +50,7 @@ void setup ()
 
 public void draw ()
 {
+    // if (keyPressed) handleKeyPress();
     background( 0 );
     if(isWon()) {
         displayWinningMessage();
@@ -129,7 +160,7 @@ public class MSButton
     // called by manager
     public void mousePressed () 
     {
-        if (gameDone || (clicked && !flagged)) return;
+        if (gameDone || (clicked && !flagged) || (isFirstClick && mouseButton == RIGHT)) return;
         clicked = true;
         if (isFirstClick) { // first click is always a "0" (blank) square
           isFirstClick = false;
