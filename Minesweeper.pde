@@ -9,7 +9,6 @@ public boolean gameDone = false; // this boolean is used to stop clicks after th
 public boolean isFirstClick = true; // this boolean is used for "safe first click" (i.e first click is never a mine)
 
 public void handleKeyPress() {
-   System.out.println("you pressed a key.");
   if (!isFirstClick || gameDone) return;
   if (key == '1') {
     NUM_MINES = 10;
@@ -39,7 +38,6 @@ public void handleKeyPress() {
     NUM_COLS = 25;
   }
   initGame();
-  System.out.println("init game successfully ran.");
 }
 
 void setup ()
