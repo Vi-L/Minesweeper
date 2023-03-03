@@ -9,35 +9,39 @@ public boolean gameDone = false; // this boolean is used to stop clicks after th
 public boolean isFirstClick = true; // this boolean is used for "safe first click" (i.e first click is never a mine)
 
 public void handleKeyPress() {
+   System.out.println("you pressed a key.");
   if (!isFirstClick || gameDone) return;
   if (key == '1') {
     NUM_MINES = 10;
+    initGame();
   } else if (key == '2') {
     NUM_MINES = 20;
+    initGame();
   } else if (key == '3') {
     NUM_MINES = 40;
+    initGame();
   } else if (key == '4') {
     NUM_MINES = 80;
+    initGame();
   } else if (key == '5') {
     NUM_MINES = 160;
+    initGame();
   } else if (key == 's') {
     NUM_MINES = 10;
-    NUM_ROWS = 5;
-    NUM_COLS = 5;
-  } else if (key == 'm') {
-    NUM_MINES = 40;
     NUM_ROWS = 10;
     NUM_COLS = 10;
-  } else if (key == 'l') {
-    NUM_MINES = 160;
+    initGame();
+  } else if (key == 'm') {
+    NUM_MINES = 40;
     NUM_ROWS = 20;
     NUM_COLS = 20;
-  } else if (key == 'h') {
+    initGame();
+  } else if (key == 'l') {
     NUM_MINES = 160;
     NUM_ROWS = 25;
     NUM_COLS = 25;
+    initGame();
   }
-  initGame();
 }
 
 void setup ()
@@ -66,6 +70,7 @@ public void draw ()
 /* GAME RELATED FUNCTIONS */
 
 public void initGame() {
+  destroyGame();
   // initialize buttons
     buttons = new MSButton[NUM_ROWS][NUM_COLS];
     for (int i = 0; i < NUM_ROWS; i++) {
@@ -74,6 +79,15 @@ public void initGame() {
       }
     }
     setMines();
+    System.out.println(mines.size());
+}
+
+public void destroyGame() {
+  for (int i = 0; i < buttons.length; i++) {
+    for (int j = 0; j < buttons[i].length; j++) {
+      Interactive.remove(buttons[i][j]);
+    }
+  }
 }
 
 public void setMines()
