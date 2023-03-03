@@ -1,55 +1,12 @@
 import de.bezier.guido.*;
 
-public int NUM_ROWS = 20; // "constants", only change at beginning before game starts
-public int NUM_COLS = 20;
-public int NUM_MINES = 40;
-private MSButton[][] buttons = new MSButton[NUM_ROWS][NUM_COLS]; //2d array of minesweeper buttons
+public final static int NUM_ROWS = 20; // constants
+public final static int NUM_COLS = 20;
+public final static int NUM_MINES = 50;
+private MSButton[][] buttons; //2d array of minesweeper buttons
 private ArrayList <MSButton> mines = new ArrayList<MSButton>(); //ArrayList of just the minesweeper buttons that are mined
 public boolean gameDone = false; // this boolean is used to stop clicks after the game is over
 public boolean isFirstClick = true; // this boolean is used for "safe first click" (i.e first click is never a mine)
-
-public void handleKeyPress() {
-  if (!isFirstClick || gameDone) return;
-  if (key == '1') {
-    NUM_MINES = 10;
-    destroyGame();
-    initGame();
-  } else if (key == '2') {
-    NUM_MINES = 20;
-    destroyGame();
-    initGame();
-  } else if (key == '3') {
-    NUM_MINES = 40;
-    destroyGame();
-    initGame();
-  } else if (key == '4') {
-    NUM_MINES = 80;
-    destroyGame();
-    initGame();
-  } else if (key == '5') {
-    NUM_MINES = 160;
-    destroyGame();
-    initGame();
-  } else if (key == 's') {
-    NUM_MINES = 10;
-    NUM_ROWS = 10;
-    NUM_COLS = 10;
-    destroyGame();
-    initGame();
-  } else if (key == 'm') {
-    NUM_MINES = 40;
-    NUM_ROWS = 20;
-    NUM_COLS = 20;
-    destroyGame();
-    initGame();
-  } else if (key == 'l') {
-    NUM_MINES = 160;
-    NUM_ROWS = 25;
-    NUM_COLS = 25;
-    destroyGame();
-    initGame();
-  }
-}
 
 void setup ()
 {
@@ -64,7 +21,7 @@ void setup ()
 
 public void draw ()
 {
-     if (keyPressed) handleKeyPress();
+     //if (keyPressed) handleKeyPress(); //ignore
     background( 0 );
     if(isWon()) {
         displayWinningMessage();
@@ -85,14 +42,6 @@ public void initGame() {
       }
     }
     setMines();
-}
-
-public void destroyGame() {
-  for (int i = 0; i < buttons.length; i++) {
-    for (int j = 0; j < buttons[i].length; j++) {
-      Interactive.remove(buttons[i][j]);
-    }
-  }
 }
 
 public void setMines()
@@ -263,3 +212,59 @@ public class MSButton
       flagged = val;
     }
 }
+
+/* CODE FOR SETTING DIFFICULTY (DOES NOT WORK) */
+
+// "remove" does not exist for the version of guido that processing has, so we get weird behavior
+//   when we change the size and then click (old buttons still affect game even when buttons[][] is cleared)
+
+//public void handleKeyPress() {
+//  if (!isFirstClick || gameDone) return;
+//  if (key == '1') {
+//    NUM_MINES = 10;
+//    destroyGame();
+//    initGame();
+//  } else if (key == '2') {
+//    NUM_MINES = 20;
+//    destroyGame();
+//    initGame();
+//  } else if (key == '3') {
+//    NUM_MINES = 40;
+//    destroyGame();
+//    initGame();
+//  } else if (key == '4') {
+//    NUM_MINES = 80;
+//    destroyGame();
+//    initGame();
+//  } else if (key == '5') {
+//    NUM_MINES = 160;
+//    destroyGame();
+//    initGame();
+//  } else if (key == 's') {
+//    NUM_MINES = 10;
+//    NUM_ROWS = 10;
+//    NUM_COLS = 10;
+//    destroyGame();
+//    initGame();
+//  } else if (key == 'm') {
+//    NUM_MINES = 40;
+//    NUM_ROWS = 20;
+//    NUM_COLS = 20;
+//    destroyGame();
+//    initGame();
+//  } else if (key == 'l') {
+//    NUM_MINES = 160;
+//    NUM_ROWS = 25;
+//    NUM_COLS = 25;
+//    destroyGame();
+//    initGame();
+//  }
+//}
+
+//public void destroyGame() {
+//  for (int i = 0; i < buttons.length; i++) {
+//    for (int j = 0; j < buttons[i].length; j++) {
+//      Interactive.remove(buttons[i][j]);
+//    }
+//  }
+//}
