@@ -3,7 +3,7 @@ import de.bezier.guido.*;
 public int NUM_ROWS = 20; // "constants", only change at beginning before game starts
 public int NUM_COLS = 20;
 public int NUM_MINES = 40;
-private MSButton[][] buttons; //2d array of minesweeper buttons
+private MSButton[][] buttons = new MSButton[NUM_ROWS][NUM_COLS]; //2d array of minesweeper buttons
 private ArrayList <MSButton> mines = new ArrayList<MSButton>(); //ArrayList of just the minesweeper buttons that are mined
 public boolean gameDone = false; // this boolean is used to stop clicks after the game is over
 public boolean isFirstClick = true; // this boolean is used for "safe first click" (i.e first click is never a mine)
@@ -13,33 +13,41 @@ public void handleKeyPress() {
   if (!isFirstClick || gameDone) return;
   if (key == '1') {
     NUM_MINES = 10;
+    destroyGame();
     initGame();
   } else if (key == '2') {
     NUM_MINES = 20;
+    destroyGame();
     initGame();
   } else if (key == '3') {
     NUM_MINES = 40;
+    destroyGame();
     initGame();
   } else if (key == '4') {
     NUM_MINES = 80;
+    destroyGame();
     initGame();
   } else if (key == '5') {
     NUM_MINES = 160;
+    destroyGame();
     initGame();
   } else if (key == 's') {
     NUM_MINES = 10;
     NUM_ROWS = 10;
     NUM_COLS = 10;
+    destroyGame();
     initGame();
   } else if (key == 'm') {
     NUM_MINES = 40;
     NUM_ROWS = 20;
     NUM_COLS = 20;
+    destroyGame();
     initGame();
   } else if (key == 'l') {
     NUM_MINES = 160;
     NUM_ROWS = 25;
     NUM_COLS = 25;
+    destroyGame();
     initGame();
   }
 }
@@ -70,7 +78,6 @@ public void draw ()
 /* GAME RELATED FUNCTIONS */
 
 public void initGame() {
-  destroyGame();
   // initialize buttons
     buttons = new MSButton[NUM_ROWS][NUM_COLS];
     for (int i = 0; i < NUM_ROWS; i++) {
