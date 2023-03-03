@@ -8,34 +8,39 @@ private ArrayList <MSButton> mines = new ArrayList<MSButton>(); //ArrayList of j
 public boolean gameDone = false; // this boolean is used to stop clicks after the game is over
 public boolean isFirstClick = true; // this boolean is used for "safe first click" (i.e first click is never a mine)
 
-//public void handleKeyPress() {
-//  if (!isFirstClick || gameDone) return;
-//  if (key == '1') {
-//    NUM_MINES = 10;
-//  } else if (key == '2') {
-//    NUM_MINES = 20;
-//  } else if (key == '3') {
-//    NUM_MINES = 40;
-//  } else if (key == '4') {
-//    NUM_MINES = 80;
-//  } else if (key == '5') {
-//    NUM_MINES = 160;
-//  } else if (key == 's' && NUM_MINES < 25) {
-//    NUM_ROWS = 5;
-//    NUM_COLS = 5;
-//  } else if (key == 'm' && NUM_MINES < 100) {
-//    NUM_ROWS = 10;
-//    NUM_COLS = 10;
-//  } else if (key == 'l' && NUM_MINES < 400) {
-//    NUM_ROWS = 20;
-//    NUM_COLS = 20;
-//  } else if (key == 'h') {
-//    NUM_ROWS = 25;
-//    NUM_COLS = 25;
-//  }
-//  System.out.println("hit");
-//  initGame();
-//}
+public void handleKeyPress() {
+   System.out.println("you pressed a key.");
+  if (!isFirstClick || gameDone) return;
+  if (key == '1') {
+    NUM_MINES = 10;
+  } else if (key == '2') {
+    NUM_MINES = 20;
+  } else if (key == '3') {
+    NUM_MINES = 40;
+  } else if (key == '4') {
+    NUM_MINES = 80;
+  } else if (key == '5') {
+    NUM_MINES = 160;
+  } else if (key == 's') {
+    NUM_MINES = 10;
+    NUM_ROWS = 5;
+    NUM_COLS = 5;
+  } else if (key == 'm') {
+    NUM_MINES = 40;
+    NUM_ROWS = 10;
+    NUM_COLS = 10;
+  } else if (key == 'l') {
+    NUM_MINES = 160;
+    NUM_ROWS = 20;
+    NUM_COLS = 20;
+  } else if (key == 'h') {
+    NUM_MINES = 160;
+    NUM_ROWS = 25;
+    NUM_COLS = 25;
+  }
+  initGame();
+  System.out.println("init game successfully ran.");
+}
 
 void setup ()
 {
@@ -50,7 +55,7 @@ void setup ()
 
 public void draw ()
 {
-    // if (keyPressed) handleKeyPress();
+     if (keyPressed) handleKeyPress();
     background( 0 );
     if(isWon()) {
         displayWinningMessage();
@@ -91,8 +96,8 @@ public boolean isWon()
 {
     for (int i = 0; i < NUM_ROWS; i++) {
       for (int j = 0; j < NUM_COLS; j++) {
-        if (!mines.contains(buttons[i][j]) && !buttons[i][j].isClicked())
-          return false; // if it is NOT a mine and it is NOT clicked, game is not yet won
+        if (!mines.contains(buttons[i][j]) && !buttons[i][j].isClicked() || buttons[i][j].isClicked())
+          return false; // if it is NOT a mine AND it is NOT clicked, or it is flagged, game is not yet won
         if (mines.contains(buttons[i][j]) && !buttons[i][j].isFlagged()) 
           return false; // if it IS a mine and it is NOT flagged, game is not yet won
       }
