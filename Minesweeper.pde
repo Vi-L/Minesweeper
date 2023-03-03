@@ -86,7 +86,6 @@ public void initGame() {
       }
     }
     setMines();
-    System.out.println(mines.size());
 }
 
 public void destroyGame() {
